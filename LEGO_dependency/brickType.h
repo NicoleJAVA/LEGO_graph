@@ -23,7 +23,7 @@ int setBrickType_1x2 ( int ID );
 int setBrickType_2x4 ( int ID );
 int setBrickType_2x2 ( int ID );
 int setPlateType_1x4_clockY ( int ID ); //rotate Y clockwise 順時針
-char * setBrickType(char * tok, char matrixStr[50], int ID );
+std::string setBrickType(char * tok, char matrixStr[50], int ID );
 bool isRotate( char matrixStr[50] );
 
 
@@ -33,32 +33,33 @@ bool isRotate( char matrixStr[50] );
 //    *
 //    - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - 
 
-char * setBrickType(char * tok, char matrixStr[50], int ID )
+std::string setBrickType(char * tok, char matrixStr[50], int ID )
+//char * setBrickType(char * tok, char matrixStr[50], int ID )
 { 
 
 	int compare;//*int strcmp ( const char * str1, const char * str2 );*/
-	char *brickType = new char[100];
+	//char * bricks[ID].btype = new char[100];
 	bool rotateBool = isRotate(matrixStr);
-
+	std::string brickType;
 
 
     //    S T A R T  ::   brick 1x1    _______________________________________________
 
 	if(  compare=strcmp(tok,"3005.dat") == 0 ){ // brick 1x1 
 		if( rotateBool==0 ){
-			brickType = "1x1";
+			bricks[ID].btype = "1x1";
 			bricks[ID].holeXNum = 1;
 			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 1;
+			bricks[ID].studXNum = 1;
+			bricks[ID].studZNum = 1;
 			bricks[ID].heightY = 24; 
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-			brickType = "1x1";
+			bricks[ID].btype = "1x1";
 			bricks[ID].holeXNum = 1;
 			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 1;
+			bricks[ID].studXNum = 1;
+			bricks[ID].studZNum = 1;
 			bricks[ID].heightY = 24; 
 		}    //    END if ( isRotate) 
 		else{
@@ -72,19 +73,19 @@ char * setBrickType(char * tok, char matrixStr[50], int ID )
 
 	else if( compare = strcmp(tok, "3004.dat") == 0){ // brick 1x2
 		if( rotateBool==0 ){
-			brickType = "1x2";
+			bricks[ID].btype = "1x2";
 			bricks[ID].holeXNum = 2;
 			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 2;
-			bricks[ID].stubZNum = 1;
+			bricks[ID].studXNum = 2;
+			bricks[ID].studZNum = 1;
 			bricks[ID].heightY = 24; 
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-			brickType = "1x2_90";
+			bricks[ID].btype = "1x2_90";
 			bricks[ID].holeXNum = 1;
 			bricks[ID].holeZNum = 2;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 2;
+			bricks[ID].studXNum = 1;
+			bricks[ID].studZNum = 2;
 			bricks[ID].heightY = 24; 
 		}    //    END if ( isRotate) 
 		else{
@@ -100,19 +101,19 @@ char * setBrickType(char * tok, char matrixStr[50], int ID )
 
 	else if( compare=strcmp(tok,"3622.dat") == 0 ){ // brick 1x3 
 		if( rotateBool==0 ){
-			brickType = "brick1x3"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
+			bricks[ID].btype = "brick1x3"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
 			bricks[ID].holeXNum = 3;
 			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 3;
-			bricks[ID].stubZNum = 1;
+			bricks[ID].studXNum = 3;
+			bricks[ID].studZNum = 1;
 			bricks[ID].heightY = 24; 
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-			brickType = "brick1x2_90";
+			bricks[ID].btype = "brick1x2_90";
 			bricks[ID].holeXNum = 1;
 			bricks[ID].holeZNum = 3;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 3;
+			bricks[ID].studXNum = 1;
+			bricks[ID].studZNum = 3;
 			bricks[ID].heightY = 24; 
 		}    //    END if ( isRotate) 
 		else{
@@ -128,19 +129,19 @@ char * setBrickType(char * tok, char matrixStr[50], int ID )
 
 	else if( compare=strcmp(tok,"3001.dat") == 0 ){    // brick 2x4 (3001.dat)
 		if( rotateBool==0 ){
-			brickType = "brick1x3"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
+			bricks[ID].btype = "brick1x3"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
 			bricks[ID].holeXNum = 4;
 			bricks[ID].holeZNum = 2;
-			bricks[ID].stubXNum = 4;
-			bricks[ID].stubZNum = 2;
+			bricks[ID].studXNum = 4;
+			bricks[ID].studZNum = 2;
 			bricks[ID].heightY = 24; 
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-			brickType = "brick1x3_90";
+			bricks[ID].btype = "brick1x3_90";
 			bricks[ID].holeXNum = 2;
 			bricks[ID].holeZNum = 4;
-			bricks[ID].stubXNum = 2;
-			bricks[ID].stubZNum = 4;
+			bricks[ID].studXNum = 2;
+			bricks[ID].studZNum = 4;
 			bricks[ID].heightY = 24; 
 		}    //    END if ( isRotate) 
 		else{
@@ -157,19 +158,19 @@ char * setBrickType(char * tok, char matrixStr[50], int ID )
 	else if( (compare = strcmp(tok, "3003.dat")) ==0 ){ // brick 2x2
 	//有空再來解開封印 : 以下這行 : //setBrickType_2x2( ID );
 		if( rotateBool==0 ){
-			brickType = "brick2x2";
+			bricks[ID].btype = "brick2x2";
 			bricks[ID].holeXNum = 2;
 			bricks[ID].holeZNum = 2;
-			bricks[ID].stubXNum = 2;
-			bricks[ID].stubZNum = 2;
+			bricks[ID].studXNum = 2;
+			bricks[ID].studZNum = 2;
 			bricks[ID].heightY = 24; 
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-			brickType = "brick2x2";
+			bricks[ID].btype = "brick2x2";
 			bricks[ID].holeXNum = 2;
 			bricks[ID].holeZNum = 2;
-			bricks[ID].stubXNum = 2;
-			bricks[ID].stubZNum = 2;
+			bricks[ID].studXNum = 2;
+			bricks[ID].studZNum = 2;
 			bricks[ID].heightY = 24; 
 		}    //    END if ( isRotate) 
 		else{
@@ -184,19 +185,19 @@ char * setBrickType(char * tok, char matrixStr[50], int ID )
 
 	else if( (compare = strcmp(tok, "3710.dat")) ==0 ){ // plate 1x4
 		if( rotateBool==0 ){
-			brickType = "plate1x4"; // "brickType" should follow what MLCAD name the brick 
+			bricks[ID].btype = "plate1x4"; // "brickType" should follow what MLCAD name the brick 
 			bricks[ID].holeXNum = 4;
 			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 4;
-			bricks[ID].stubZNum = 1;
+			bricks[ID].studXNum = 4;
+			bricks[ID].studZNum = 1;
             bricks[ID].heightY = 8;  
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-			brickType = "plate1x4_90"; // is rotated clockwise along Y-axis by 90 degrees 
+			bricks[ID].btype = "plate1x4_90"; // is rotated clockwise along Y-axis by 90 degrees 
 			bricks[ID].holeXNum = 1; 
 			bricks[ID].holeZNum = 4;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 4;
+			bricks[ID].studXNum = 1;
+			bricks[ID].studZNum = 4;
             bricks[ID].heightY = 8;  
 		}    //    END if ( isRotate) 
 		else{
@@ -211,12 +212,30 @@ char * setBrickType(char * tok, char matrixStr[50], int ID )
 
 
 	else{
-        brickType = "nxn";
+        bricks[ID].btype = "nxn";
 	    return brickType;
 	}        //    E N D   <<　 if( brick nxn ) _______________________________________________
     //*Nicole STYLE //*Thanks to what Luchian Grigore answered to how to return char array in c++ 
 	logFile2 <<"\n- - - - -      E N D   <<   setBrickType()     - - - - - \n\n" ;
     return brickType;
+/*	2014-10-10
+這個世界上最重要的事情就是，能 void 就 void ！因為一離開函數，很多位址都被 release 了！
+而且我本來想說，那我不就要把所有的 return 都改掉嗎?
+不過其實我後來有點小聰明，
+我還是讓它們 return brickType 呀，但是我根本不在其他地方去接收它 哈哈哈哈哈哈哈
+然後咧實際上我就用世界上最好用的 "尋找/取代" 
+我一次搜尋了所有的 [ brickType = ] ，然後全部取代成 [ bricks[c].btype = ] 
+啊哈哈哈哈哈哈哈一次取代了16筆，爽啊！
+幹結果我弄到快瘋掉的東西，真正的重點就只是，能不要用函數去 return 的，就不要！
+因為一離開函數，很多位址都被 release 了！ 
+能不要用 return 的就不要用 return 的，盡量變成是一個參數被放進黑箱子裡面改，
+例如 main 裡面有個字串想被編輯，
+那它就盡量不要去接收別的函數的回傳值，
+而是它自己就要當作一個參數被傳到那個函數去美容一下！
+
+老實說這概念我好像在大一還是 IR 的時候就發現了耶 QQ 今天居然完全忘記 唉 ! 
+*/
+
 }
 
 void this_is_template(){
@@ -224,19 +243,19 @@ void this_is_template(){
 // 以下是樣版
 /*
 		if( rotateBool==0 ){
-			brickType = "幾x幾"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
+			bricks[ID].btype = "幾x幾"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
 			bricks[ID].holeXNum = 啦啦啦;
 			bricks[ID].holeZNum = 啦啦啦;
-			bricks[ID].stubXNum = 啦啦啦;
-			bricks[ID].stubZNum = 啦啦啦;
+			bricks[ID].studXNum = 啦啦啦;
+			bricks[ID].studZNum = 啦啦啦;
 			bricks[ID].heightY = 拉拉拉拉拉; 
         }    //    END if( isNOTRotate ) 
 		else if( rotateBool==1 ){
-		    brickType = "幾x幾_90"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
+		    bricks[ID].btype = "幾x幾_90"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
 			bricks[ID].holeXNum = 啦啦啦;
 			bricks[ID].holeZNum = 啦啦啦;
-			bricks[ID].stubXNum = 啦啦啦;
-			bricks[ID].stubZNum = 啦啦啦;
+			bricks[ID].studXNum = 啦啦啦;
+			bricks[ID].studZNum = 啦啦啦;
 			bricks[ID].heightY = 拉拉拉拉拉; 
 		}    //    END if ( isRotate) 
 		else{
@@ -355,8 +374,8 @@ int setBrickType_2x2 ( int ID )
 	/*
 	bricks[ID].holeXNum = 2;
 	bricks[ID].holeZNum = 2;
-	bricks[ID].stubXNum = 2;
-	bricks[ID].stubZNum = 2;
+	bricks[ID].studXNum = 2;
+	bricks[ID].studZNum = 2;
 	*/
 
     return 0;

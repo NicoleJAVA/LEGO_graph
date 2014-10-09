@@ -1,7 +1,132 @@
 
-logic error ! 
-The first argument must be BOTTOM brick n' vice versa.
-But now brick 1 is above brick 2 .
-The STUB of argument 1 is at (Y-12) = -12
-The HOLE of argument 2 is at (Y+12) = 4
-Terminate function  find_dependency() !
+ bricks[c].y is : 0
+ 靠 這是 bricks[c].btype 唷 : brick1x3好的停嘍。
+
+ bricks[c].y is : -24
+ 靠 這是 bricks[c].btype 唷 : 1x2好的停嘍。
+
+ bricks[c].y is : -24
+ 靠 這是 bricks[c].btype 唷 : 1x1好的停嘍。
+
+ bricks[c].y is : 0
+ 靠 這是 bricks[c].btype 唷 : brick2x2好的停嘍。
+
+ bricks[c].y is : -24
+ 靠 這是 bricks[c].btype 唷 : brick1x3好的停嘍。
+
+ bricks[c].y is : 16
+ 靠 這是 bricks[c].btype 唷 : plate1x4好的停嘍。
+
+ bricks[c].y is : 8
+ 靠 這是 bricks[c].btype 唷 : plate1x4好的停嘍。
+
+ bricks[c].y is : 0
+ 靠 這是 bricks[c].btype 唷 : plate1x4好的停嘍。
+
+ bricks[c].y is : -8
+ 靠 這是 bricks[c].btype 唷 : plate1x4_90好的停嘍。
+
+ bricks[c].y is : 0
+ 靠 這是 bricks[c].btype 唷 : nxn好的停嘍。
+
+ BOTTOM brick: 
+ i is 0
+ j is 0
+
+ UPPER brick: 
+ a is 1
+ b is 0
+
+ Brick1 x 是走到了 -30
+ Brick2 x 是走到了 -30
+ Brick1 z 是走到了 10
+ Brick2 z 是走到了 10
+ diffz is 0
+
+ Found brick 1 1x2 is depdent on brick 0 brick1x3 
+
+
+ BOTTOM brick: 
+ i is 3
+ j is 0
+
+ UPPER brick: 
+ a is 0
+ b is 0
+
+ Brick1 x 是走到了 30
+ Brick2 x 是走到了 30
+ Brick1 z 是走到了 10
+ Brick2 z 是走到了 10
+ diffz is 0
+
+ Found brick 2 1x1 is depdent on brick 0 brick1x3 
+
+
+ BOTTOM brick: 
+ i is 0
+ j is 1
+
+ UPPER brick: 
+ a is 1
+ b is 0
+
+ Brick1 x 是走到了 -30
+ Brick2 x 是走到了 -30
+ Brick1 z 是走到了 -10
+ Brick2 z 是走到了 -10
+ diffz is 0
+
+ Found brick 4 brick1x3 is depdent on brick 0 brick1x3 
+
+
+ BOTTOM brick: 
+ i is 1
+ j is 0
+
+ UPPER brick: 
+ a is 0
+ b is 0
+
+ Brick1 x 是走到了 -50
+ Brick2 x 是走到了 -50
+ Brick1 z 是走到了 10
+ Brick2 z 是走到了 10
+ diffz is 0
+
+ Found brick 1 1x2 is depdent on brick 3 brick2x2 
+
+
+ BOTTOM brick: 
+ i is 1
+ j is 1
+
+ UPPER brick: 
+ a is 0
+ b is 0
+
+ Brick1 x 是走到了 -50
+ Brick2 x 是走到了 -50
+ Brick1 z 是走到了 -10
+ Brick2 z 是走到了 -10
+ diffz is 0
+
+ Found brick 4 brick1x3 is depdent on brick 3 brick2x2 
+
+
+ BOTTOM brick: 
+ i is 3
+ j is 0
+
+ UPPER brick: 
+ a is 0
+ b is 3
+
+ Brick1 x 是走到了 10
+ Brick2 x 是走到了 10
+ Brick1 z 是走到了 -30
+ Brick2 z 是走到了 -30
+ diffz is 0
+
+ Found brick 8 plate1x4_90 is depdent on brick 5 plate1x4 
+

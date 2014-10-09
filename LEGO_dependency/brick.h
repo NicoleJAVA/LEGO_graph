@@ -1,14 +1,21 @@
-
+#include <stdlib.h> 
+#include <stdio.h>
+#include <string.h>
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
 struct brick{
 
     int ID;
-	char btype[20];
+	std::string btype;
+	std::string btypeStr;
 	int x;
 	int y;
 	int z;
 	int nbNum; /*numbers of neighbor*/
-	int stubXNum;
-	int stubZNum;
+	int studXNum;
+	int studZNum;
 	int holeXNum;
 	int holeZNum;
 	int heightY;

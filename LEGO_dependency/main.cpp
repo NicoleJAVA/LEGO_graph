@@ -81,16 +81,15 @@ int main()
 	}   /*   END if(graphFile.is_open())   END   */
 
 
+//                    *-  -  -  -  -  -  -  -  -  -  -  -  -  -  - *
+//                    *                                            *
+//                    *                                            *
+//                    *             Find the Dependency            *
+//                    *                                            *
+//                    *                                            *
+//                    *-  -  -  -  -  -  -  -  -  -  -  -  -  -  - *
 
-	// *  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
-    // *  
-    // * 
-	// *             Find the Dependency       
-	// *
-	// * 
-	// *  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  
-/*
-先藏起來等一下再解開封印吼，這是幫全部的人都找出 dependency，但是目前都只做兩兩測試
+//先藏起來等一下再解開封印吼，這是幫全部的人都找出 dependency，但是目前都只做兩兩測試
 int i,j; // i is BOTTOM brick; j is UPPER brick
 	for( i=0; i<c; i++ ){
 		for( j=0; j<c; j++ ){
@@ -106,21 +105,15 @@ int i,j; // i is BOTTOM brick; j is UPPER brick
 			}    //   END    if( bricks[i].y != bricks[j].y) 
 		}        //   END    for( j=0 )
 	}            //   END    for( i=0 )
-先藏起來等一下再解開封印吼
-*/    find_dependency(0, 8); //旋轉的 plate 1x4 和 Brick 2x4 
+//先藏起來等一下再解開封印吼
 
 	logFile.close();
-	return 0;
+	return 0; 
 }
 
 
 
-int closeFile()
-{
-	ldrFile.close();
-	return 0;
 
-}
 
 string ldrToBrickNode(string ldrLine, int c, int ldrLineLength)
 /* c will be the ID of the brick because this is the c-th line of .ldr file*/
@@ -130,15 +123,18 @@ string ldrToBrickNode(string ldrLine, int c, int ldrLineLength)
    char matStr[50] =""; /* matStr is the rotation matrix that includes 9 matrix elements in one line*/
    int mat1, mat2, mat3, mat4, mat5, mat6, mat7, mat8, mat9; /*the 1st to 9th element in the rotation matrix*/
    char temp[120];
-   char *legoType = new char[50]; /*.\main.cpp(109) : error C2440: '=' : 無法由 'char *' 轉換為 'char [50]'*/
+   //我在還沒把 setBrickType 的 return 值改為 const char * 前的寫法是
+   //char *legoType = new char[50]; //error C2440: '=' : 無法由 'char *' 轉換為 'char [50]' 
+   //但我現在改為
+   //char *legoType;
+
    char c_char[50];  
-   /* int ldrLineLength = ldrLine.length(); */
-   strncpy(ldrTxt, ldrLine.c_str(), ldrLineLength);   /*strcpy(ldrTxt, ldrLine.c_str()); */
-   /*right now, 馬上先檢查!*/
+   strncpy(ldrTxt, ldrLine.c_str(), ldrLineLength);   // strcpy(ldrTxt, ldrLine.c_str()); 
    char * tok;
-   char tokTemp[120];
-  /*tokenize out the first thing of the first line*/
-   tok = strtok(ldrTxt," ");
+
+//     S T A R T   >>   
+
+   tok = strtok(ldrTxt," "); //tokenize out the first thing of the first line
    while(tok!=NULL){
 	   strcpy(brickNodeTxt, tok);
 	   tok = strtok(NULL," "); 
@@ -153,6 +149,7 @@ string ldrToBrickNode(string ldrLine, int c, int ldrLineLength)
 	   if(k==2){
 	       int y2 = atoi(tok);
 		   bricks[c].y = y2;
+		   logFile << "\n bricks[c].y is : " << bricks[c].y;
 	   }
 	   if(k==3){
 	       int z2 = atoi(tok);
@@ -167,111 +164,125 @@ string ldrToBrickNode(string ldrLine, int c, int ldrLineLength)
 	   if(k==11){	       mat8 = atoi(tok);strcat(matStr," ");strcat(matStr,tok);}
 	   if(k==12){	       mat9 = atoi(tok);strcat(matStr," ");strcat(matStr,tok);}
 	   if(k==13){
-	   legoType = setBrickType(tok, matStr, c ); /*.\main.cpp(109) : error C2440: '=' : 無法由 'char *' 轉換為 'char [50]'*/
+	   setBrickType(tok, matStr, c ); // error C2440: '=' : 無法由 'char *' 轉換為 'char [50]'
+
 	   }
-	   // Initialize the friend list of our new-comer brick !
-       bricks[c].priorCount = 0;
+	   
+       bricks[c].priorCount = 0; // Initialize the friend list of our new-comer brick !
 	   bricks[c].dpdtCount = 0;
-	   k++; // k : the k-th token of a line in the .ldr file
+	   k++;                      // k : the k-th token of a line in the .ldr file
    }
+   logFile << "\n 靠 這是 bricks[c].btype 唷 : " << bricks[c].btype << "好的停嘍。\n" ;
    return  string(brickNodeTxt);
 }
 
 
-//**********************************************************/
 
-
-
-//*************************************************************
 int find_dependency( int bricksIndex1, int bricksIndex2 )
-//* Brick1 is the BOTTOM brick, Brick2 is the UPPER brick
-// This function wants to know whether they connect at Brick1's STUB and Brick2's HOLE. 
 {   
-/*
-logFile<<"\n--------In function find_dependency-------\n"<<"\n ID1 is "<<bricksIndex1<<". ID2 is "<<bricksIndex2<<"\n";
-*/
-//不允許 [參數一是上層積木. 參數二是下層積木] 的情況發生
-//傳參數的時候一定要是 (一樓, 二樓) 才可以傳
-    if(bricks[bricksIndex1].y ==  bricks[bricksIndex2].y ){ 
-	// if the bricks are at the same Y coordinte (same floor) , 
-	//then find_dependency() cannot accept same-Y bricks to compare them
-            logFile << "\nlogic error ! \nThe first argument must be BOTTOM brick n' vice versa.";
-	    	logFile << "\nBut now the two bricks are on the same Y.";
-			logFile << "\nThe STUB of argument 1 is at Y = "<<bricks[bricksIndex1].y <<"\nThe HOLE of argument 2 is at Y = "<<bricks[bricksIndex2].y ;
-	    	logFile << "\nTerminate function  find_dependency() !\n";
-			return -1;
-	}
-	else if(bricks[bricksIndex1].y - 12 < bricks[bricksIndex2].y + 12){
+    //    Brick1 is the BOTTOM brick, Brick2 is the UPPER brick
+    //    This function wants to know whether they connect at Brick1's stud and Brick2's HOLE. 
+    //    [這是錯誤: 參數一是上層積木. 參數二是下層積木] 
+    //    傳參數的時候一定要是 (一樓, 二樓) 才可以傳
+	//    x1, y1_stud, z1 是第一個積木最左上角的 stud 
+	//    x2, y2_hole, z2 是第二個積木最左上角的 hole 
 
-            logFile << "\nlogic error ! \nThe first argument must be BOTTOM brick n' vice versa.";
-	    	logFile << "\nBut now brick 1 is above brick 2 .";
-			logFile << "\nThe STUB of argument 1 is at (Y-12) = "<<bricks[bricksIndex1].y - 12<<"\nThe HOLE of argument 2 is at (Y+12) = "<<bricks[bricksIndex2].y + 12;
-	    	logFile << "\nTerminate function  find_dependency() !\n";
-			return -1;
-	}
-    
-
-	int v1 = bricks[bricksIndex1].priorCount;
-	int v2 = bricks[bricksIndex1].dpdtCount;
-	//* x1, y1, z1 是第一個積木最左上角的 hole */
-	//* x2, y2, z2 是第二個積木最左上角的 stub */
-	int x1, y1, z1, centerX1, centerY1, centerZ1;
-	int x2, y2, z2, centerX2, centerY2, centerZ2;
-	int flag = -100;
-	int i, j, a, b, K1, K2, K3, K4;
-	int diffx, diffy, diffz;
+    int brickHeight1 = bricks[bricksIndex1].heightY;
+	int brickHeight2 = bricks[bricksIndex2].heightY;
+	int x1, y1_stud, z1, centerX1, topSurfaceY1, centerZ1; // 只有Y是齊頭式平等來對齊積木，所以不取名叫 centerY1 與 centerY2, 而是叫 topSurfaceY1 與 topSurfaceY2
+	int x2, y2_hole, z2, centerX2, topSurfaceY2, centerZ2;
 	centerX1 = bricks[bricksIndex1].x;
 	centerZ1 = bricks[bricksIndex1].z;
 	centerX2 = bricks[bricksIndex2].x;
 	centerZ2 = bricks[bricksIndex2].z;
+	topSurfaceY1 = bricks[bricksIndex1].y;
+	topSurfaceY2 = bricks[bricksIndex2].y;
+	y1_stud = topSurfaceY1; 
+	y2_hole = topSurfaceY2 + brickHeight2; 
+	//常常會用到的 log 
+    //logFile << "\n\n\n\n\n --------In function find_dependency() -------\n" ;
+	//logFile << "\n ID1 is " << bricksIndex1<<".\n ID2 is "<<bricksIndex2<<".\n";
+	//常常會用到的 log 
+	//logFile << "\n topSurfaceY2 is : " << topSurfaceY2 ;
+	//logFile << "\n y1_stud = bricks[bricksIndex2].y is : " << bricks[bricksIndex2].y;
+	//logFile << "\n y2_hole = topSurfaceY2 + brickHeight2 = " << y2_hole << "\n";
 
-//*  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
+    if( (topSurfaceY1-brickHeight1) == (topSurfaceY2-brickHeight2) ){ // If Sit On Same Y (Sit On Same Floor), ERROR.
+            logFile << "\n Logic Error! \nThe first argument of find_dependency() must be BOTTOM brick.";
+	    	logFile << "\n But now the two bricks are Sitting On the Same Floor.";
+			logFile << "\n The bottom of argument 1 is at Y = topSurfaceY1-brickHeight1 = "<< topSurfaceY1-brickHeight1;
+			logFile << "\n The bottom of argument 2 is at Y = topSurfaceY2-brickHeight2 = "<< topSurfaceY2-brickHeight2 ;
+	    	logFile << "\n Terminate function  find_dependency() !\n";
+			return -1;
+	}
+	else if( y1_stud < y2_hole ){   // If stud(y1) Is ABOVE Hole(y2), ERROR.
 
-// For a K-stub-on-x  (or for a K-stub-on-z), let's say:
-// leftmost 的 stub 的圓心的 x 座標為 Center stub 的x座標  -10 K  + 10 #
-// Therfore, Brick (1) is : 
-	y1 = bricks[bricksIndex1].y - 12;
-    K1 = bricks[bricksIndex1].stubXNum;
-	K2 = bricks[bricksIndex1].stubZNum;
+            logFile << "\n Logic Error! \nThe first argument of find_dependency() must be BOTTOM brick.";
+	    	logFile << "\n But now brick 1 ["<< bricksIndex1 << "] is above brick 2 [" << bricksIndex2 << "] ...";
+			// 之前的 logFile << "\nThe stud of argument 1 is at (Y-12) = "<<bricks[bricksIndex1].y - 12<<"\nThe HOLE of argument 2 is at (Y+12) = "<<bricks[bricksIndex2].y + 12;
+			logFile << "\n topSurfaceY1 : " << topSurfaceY1; 
+			logFile << "\n brickHeight1 : " << brickHeight1;
+			logFile << "\n topSurfaceY2 : " << topSurfaceY2; 
+			logFile << "\n brickHeight2 : " << brickHeight2;
+			logFile << "\n The stud of argument 1 is at y1_stud = " << y1_stud;
+			logFile << "\n The HOLE of argument 2 is at y2_hole = " << y2_hole; 
+			logFile << "\n Or equivalent as topSurfaceY2 + brickHeight2 = "<< topSurfaceY2 + brickHeight2;
+	    	logFile << "\nTerminate function  find_dependency() !\n";
+			return -1;
+	}    // - - - - - E N D - - - - - ERROR (y1_stud ABOVE y2_hole) - - - - - - - - - - 
+ 
+	int v1 = bricks[bricksIndex1].priorCount; // v1 is N of friends of Bottom Brick 1 
+	int v2 = bricks[bricksIndex1].dpdtCount;  // v2 is N of friends of Upper_ Brick 2
+	int flag = -100;
+	int i, j, a, b, K1, K2, K3, K4;
+	int diffx, diffy, diffz;
+
+    //- - - -  For a K-stud-on-x  (or for a K-stud-on-z), let's say:
+    //- - - -  leftmost 的 stud 的圓心的 x 座標為 Center stud 的x座標  -10 K  + 10 #
+    //- - - -  Therfore, Brick (1) is : 
+    K1 = bricks[bricksIndex1].studXNum;
+	K2 = bricks[bricksIndex1].studZNum;
     x1 = centerX1 - (10*K1) + 10;    // X1 = X - 10K + 10 背起來吧!
 	z1 = centerZ1 + (10*K2) - 10;    // Z1 = Z - 10K + 10 背起來吧!
     
-// And Brick (2) is : 
-	y2 = bricks[bricksIndex2].y + 12; 
-	K3 = bricks[bricksIndex2].stubXNum;
-	K4 = bricks[bricksIndex2].stubZNum;
+    //- - - -  And Brick (2) is : 
+	K3 = bricks[bricksIndex2].studXNum;
+	K4 = bricks[bricksIndex2].studZNum;
     x2 = centerX2 - (10*K3) + 10 ;   // X2 = X - 10K + 10 背起來吧!
 	z2 = centerZ2 + (10*K4) - 10 ;   // Z2 = Z - 10K + 10 背起來吧!
-    //  -  -  -  -  -  -  -  -  -  -  -  -  -  -  - 
 
 
-	logFile << "\n下層積木左上角的x是 : " << x1;
-	logFile << "\n上層積木x是 : " << centerX2;
-	logFile << "\n上層積木左上角的x是 : " << x2;
-		logFile << "\n下層積木左上角的z是 : " << z1;
-	logFile << "\n上層積木z是 : " << centerZ2;
-	logFile << "\n上層積木左上角的z是 : " << z2;
+    //還是滿常需要檢查的所以我先不刪掉這幾行 log 的程式
+	/*
+	logFile << "\n 下層積木中心點 x 是 : " << centerX1 << " . 下層積木中心點 z 是 : " << centerZ1 ;
+	logFile << "\n 下層積木左上角 stud 的x是 : " << x1;
+	logFile << "\n 下層積木左上角 stud 的z是 : " << z1 << "\n";
+	*/
+    //還是滿常需要檢查的所以我先不刪掉這幾行 log 的程式
+	/*
+	logFile << "\n 上層積木中心點 x 是 : " << centerX2 << " . 上層積木中心點 z 是 : " << centerZ2;
+	logFile << "\n 上層積木左上角 hole 的x是 : " << x2;
+	logFile << "\n 上層積木左上角 hole 的z是 : " << z2 << "\n";
+	*/
 
 
 // [Outer Loop] Loop-1 : The bottom Brick1, traverse X-axis 
 // [Outer Loop] Loop-2 : The bottom Brick1, traverse Z-axis 
 // [Inner Loop] Loop-3 : The upper Brick2, traverse X-axis 
 // [Inner Loop] Loop-4 : The upper Brick2, traverse Z-axis 
-	for( i=0; i<K1; i++){    
-        for( j=0; j<K2; j++){    
-			for( a=0; a<K3; a++ ){
-				for( b=0; b<K4; b++){
-				    
-//等一下刪掉
-                        logFile << "\nBOTTOM brick: " << "\ni is " << i << "\nj is " << j;
-						logFile << "\nUPPER brick: " << "\na is " << a << "\nb is " << b;
-//等一下刪掉
-
+	for( i=0; i<K1; i++){                //    Brick1, traverse X
+        for( j=0; j<K2; j++){            //    Brick1, traverse Z
+			for( a=0; a<K3; a++ ){       //    Brick2, traverse X
+				for( b=0; b<K4; b++){    //    Brick2, traverse Z
 					diffx = (x2+(a*20)) - (x1+(i*20));
 					diffz = (z2-(b*20)) - (z1-(j*20));
-					diffy = y1 - y2;
-						logFile << "\nbrick1 x 是走到了 " << x1+(i*20);
-					    logFile << "\nbrick2 x 是走到了 " << x2+(a*20);
+					diffy = y1_stud - y2_hole;
+
+					//還是滿常需要檢查的所以我先不刪掉這幾行 log 的程式
+					//logFile << "\n BOTTOM brick: " << "\n i is " << i << "\n j is " << j;
+					//logFile << "\n UPPER brick: " << "\n a is " << a << "\n b is " << b;
+					//logFile << "\n Brick1 x 是走到了 " << x1+(i*20);
+					//logFile << "\n Brick2 x 是走到了 " << x2+(a*20) << "\n";
 
 					if( diffx==0 && diffz ==0){
 						flag = 1;
@@ -279,34 +290,31 @@ logFile<<"\n--------In function find_dependency-------\n"<<"\n ID1 is "<<bricksI
 						bricks[bricksIndex1].prior_to[v1] = bricks[bricksIndex2].ID;
 						bricks[bricksIndex2].dpdt_on[v2] = bricks[bricksIndex1].ID;
 						bricks[bricksIndex1].priorCount ++;
-						bricks[bricksIndex1].dpdtCount ++;
-
-						
-                        logFile << "\n\nBOTTOM brick: " << "\ni is " << i << "\nj is " << j;
-						logFile << "\nUPPER brick: " << "\na is " << a << "\nb is " << b;
-						logFile << "\nbrick1 x 是走到了 " << x1+(i*20);
-					    logFile << "\nbrick2 x 是走到了 " << x2+(a*20);
-						logFile << "\nbrick1 z 是走到了 " << z1-(j*20);
-					    logFile << "\nbrick2 z 是走到了 " << z2-(b*20);
-						logFile << "\niffz is " << diffz;
-                        output_graph( bricksIndex1, bricksIndex2, v1, v2 );
-                        
+						bricks[bricksIndex1].dpdtCount ++;						
+                        logFile << "\n BOTTOM brick: " << "\n i is " << i << "\n j is " << j << "\n";
+						logFile << "\n UPPER brick: " << "\n a is " << a << "\n b is " << b << "\n";
+						logFile << "\n Brick1 x 是走到了 " << x1+(i*20);
+					    logFile << "\n Brick2 x 是走到了 " << x2+(a*20);
+						logFile << "\n Brick1 z 是走到了 " << z1-(j*20);
+					    logFile << "\n Brick2 z 是走到了 " << z2-(b*20);
+						logFile << "\n diffz is " << diffz << "\n";
+                        output_graph( bricksIndex1, bricksIndex2, v1, v2 );  
 					    return flag;
 					}
 					diffx = -1;
 					diffz = -1;
-				}    //*    END    for( b=0; b<1; b++)   
-			}        //*    END    for( a=0; a<2; a++)   
-		}            //*    END    for( j=0; j<2; j++)  
-	}                //*    END    for( i=0; i<4; i++)   
-
+				}    //    END    for( b=0; b<1; b++)   
+			}        //    END    for( a=0; a<2; a++)   
+		}            //    END    for( j=0; j<2; j++)  
+	}                //    END    for( i=0; i<4; i++)   
     return flag;   
 }
 
 int output_graph( int ID1, int ID2, int v1, int v2)
-
 {
-	logFile << "\nFound brick "<<ID2<<" is depdent on brick "<<ID1<<"\n";
+	// 這邊我一定要故意印出 brickType ，要不然如果只憑 ID ，我在檢查的時候如果粗心就會浪費時間debug
+	logFile << "\n Found brick "      << ID2 << " " << bricks[ID2].btype; // I purposedly printf the btype, for easier debugging
+	logFile << " is depdent on brick "<< ID1 << " " << bricks[ID1].btype << " \n\n";
     /*
 	logFile << bricks[ID1].prior_to[v1];
 	logFile <<"\n";
@@ -317,6 +325,9 @@ int output_graph( int ID1, int ID2, int v1, int v2)
 }
 
 
+int closeFile()
+{
+	ldrFile.close();
+	return 0;
 
-
-
+}
