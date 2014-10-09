@@ -21,17 +21,6 @@ x 方向上有幾個 hole  is : 2
 
 沒有旋轉,rotateYBool設定為0.
 這是 ID 為2 的 
-x 方向上有幾個 hole  is : 1
-
-- - - - -      E N D   <<   setBrickType()     - - - - - 
-
-
-來看看cosine[0]1停
-
-來看看cosine[1] 停
-
-沒有旋轉,rotateYBool設定為0.
-這是 ID 為3 的 
 x 方向上有幾個 hole  is : 2
 
 來看看cosine[0]1停
@@ -39,8 +28,16 @@ x 方向上有幾個 hole  is : 2
 來看看cosine[1] 停
 
 沒有旋轉,rotateYBool設定為0.
-這是 ID 為4 的 
+這是 ID 為3 的 
 x 方向上有幾個 hole  is : 3
+
+來看看cosine[0]-停
+
+來看看cosine[1]1停
+
+沒有旋轉,rotateYBool設定為0.
+這是 ID 為4 的 
+x 方向上有幾個 hole  is : 4
 
 來看看cosine[0]-停
 
@@ -50,20 +47,12 @@ x 方向上有幾個 hole  is : 3
 這是 ID 為5 的 
 x 方向上有幾個 hole  is : 4
 
-來看看cosine[0]-停
-
-來看看cosine[1]1停
-
-沒有旋轉,rotateYBool設定為0.
-這是 ID 為6 的 
-x 方向上有幾個 hole  is : 4
-
 來看看cosine[0]1停
 
 來看看cosine[1] 停
 
 沒有旋轉,rotateYBool設定為0.
-這是 ID 為7 的 
+這是 ID 為6 的 
 x 方向上有幾個 hole  is : 4
 
 來看看cosine[0]-停
@@ -71,11 +60,19 @@ x 方向上有幾個 hole  is : 4
 來看看cosine[1]0停
 
 有旋轉,rotateYBool設定為1.
-這是 ID 為8 的 
+這是 ID 為7 的 
 x 方向上有幾個 hole  is : 1
+
+來看看cosine[0]0停
+
+來看看cosine[1] 停
+
+有旋轉,rotateYBool設定為1.
 
 來看看cosine[0]1停
 
 來看看cosine[1] 停
 
 沒有旋轉,rotateYBool設定為0.
+這是 ID 為9 的 
+x 方向上有幾個 hole  is : 4

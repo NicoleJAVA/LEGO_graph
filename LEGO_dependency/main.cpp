@@ -22,7 +22,7 @@ using namespace std;   // 別忘了 using 它，不然 de 不完 bug
 // - - - - - - - - - - - - - - - - - - - - - - - -
 string ldrToBrickNode(string ldrLine, int c, int ldrLineLength);
 int closeFile();
-char filename[] = "mini_lego_for_graph_4"; /*filename must be array*//*dolphin_ldraw_0922*//*mini_lego_set_for_building_dependency_graph*///"mini_lego_for_graph_2"*/
+char filename[] = "mini_lego_for_graph_5"; /*filename must be array*//*dolphin_ldraw_0922*//*mini_lego_set_for_building_dependency_graph*///"mini_lego_for_graph_2"*/
 std::fstream ldrFile;
 std::fstream logFile;
 char brickNodeTxt[100];
@@ -44,43 +44,33 @@ int main()
     //**************************************
 
 	strcat(filename,".ldr");
-    /* if graphFile is local, use this :    */
+    // if graphFile is local, use this :    
 	std::fstream graphFile; 
-	/**//*這句成語就叫做標(冒冒)檔流開，因為標(std)檔(f)流(stream)開(xxx.open())*/
+	// 這句成語就叫做標(冒冒)檔流開，因為標(std)檔(f)流(stream)開(xxx.open())
 	ldrFile.open(filename,std::fstream::in);
 	graphFile.open("graph_mini.txt",std::fstream::trunc | std::fstream::out); /*ref-A*//*graph.txt*/
 	graphFile.close();
 	graphFile.open("graph_mini.txt",std::fstream::out | std::fstream::app); /*must reopen with the same flag as ref-A*//*graph.txt*/
 	int c = 0; /* c is brickCounter*/
 	string brickTxt;
-	/*graphFile.open("graph.txt", std::fstream::out | std::fstream::app);*/
-	string curLine; /*this will be current line read from the getline() function, see this later */
-	/*First, check out whether graph.txt can be created*/
-	if(graphFile.is_open()){ /*該.是底開()*/
-        /*Secondly, make sure that the existing ldr file can be open and read*/
+	// graphFile.open("graph.txt", std::fstream::out | std::fstream::app);
+	string curLine; //this will be current line read from the getline() function, see this later 
+	// First, check out whether graph.txt can be created
+	if( graphFile.is_open() ){ // 該.是底開()
+        // Secondly, make sure that the existing ldr file can be open and read
 		if(ldrFile.is_open()){
-            
-			while( !ldrFile.eof() ){
-            
+			while( !ldrFile.eof() ){       
 			    getline(ldrFile, curLine);
 				int curLineLength = curLine.length();
 				if( curLine[0] == '1' ){
-                
-				brickTxt = ldrToBrickNode(curLine, c, curLineLength);
-				graphFile << brickTxt << '\n';
-				
-				graphFile <<"shit" << '\n';
-				c++;
-				}
-				
+				    brickTxt = ldrToBrickNode(curLine, c, curLineLength);
+				    graphFile << brickTxt << '\n';
+				    c++;
+				}				
 			}
-		}   /*   END if(ldrFile.is_open())  END */
-		
-       
+		}   //   E N D    if( ldrFile is_open ) 		
 	    closeFile();
-	}   /*   END if(graphFile.is_open())   END   */
-
-
+	}       //   E N D    if( graphFile is_open ) 
 //                    *-  -  -  -  -  -  -  -  -  -  -  -  -  -  - *
 //                    *                                            *
 //                    *                                            *
@@ -88,24 +78,29 @@ int main()
 //                    *                                            *
 //                    *                                            *
 //                    *-  -  -  -  -  -  -  -  -  -  -  -  -  -  - *
+//
+//                   先藏起來等一下再解開封印吼，這是幫全部的人
+//                   都找出 dependency，但是目前只做兩兩測試
 
-//先藏起來等一下再解開封印吼，這是幫全部的人都找出 dependency，但是目前都只做兩兩測試
 int i,j; // i is BOTTOM brick; j is UPPER brick
 	for( i=0; i<c; i++ ){
 		for( j=0; j<c; j++ ){
-
-			if( bricks[i].y != bricks[j].y){
-				if( (bricks[i].y-12) < (bricks[j].y+12) ){
-	                //Cannot Compare because i is ABOVE j
-				}
-				else{
-				    find_dependency(i, j);
-				}
-
-			}    //   END    if( bricks[i].y != bricks[j].y) 
+            // WARNING very easy to have bugs here ! 
+			//不誇張，以下是非常容易長 bug 的地帶 
+			if( (bricks[i].y - bricks[i].heightY) == (bricks[j].y - bricks[j].heightY) ){   //   Sit On Sam Floor
+			    // DON'T call find_dependency() because they sit on th same floor, ERROR. 
+			}
+			else if( bricks[i].y < (bricks[j].y + bricks[j].heightY) )
+			{
+			    // Brick_1_Stud ABOVE Brick_2_Hole  >>  ERROR, DON'T call find_dependency() 
+			}
+			else{
+				find_dependency(i, j);
+			}
 		}        //   END    for( j=0 )
 	}            //   END    for( i=0 )
-//先藏起來等一下再解開封印吼
+
+//先藏起來等一下再解開封印吼,這是幫全部的人都找出 dependency，但是目前只做兩兩測試
 
 	logFile.close();
 	return 0; 
@@ -284,7 +279,7 @@ int find_dependency( int bricksIndex1, int bricksIndex2 )
 					//logFile << "\n Brick1 x 是走到了 " << x1+(i*20);
 					//logFile << "\n Brick2 x 是走到了 " << x2+(a*20) << "\n";
 
-					if( diffx==0 && diffz ==0){
+					if( diffx==0 && diffz ==0 && diffy==0 ){
 						flag = 1;
 						// update friend list of both brick1 and brick2
 						bricks[bricksIndex1].prior_to[v1] = bricks[bricksIndex2].ID;
