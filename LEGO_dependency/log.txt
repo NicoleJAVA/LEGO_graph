@@ -1,0 +1,7 @@
+
+logic error ! 
+The first argument must be BOTTOM brick n' vice versa.
+But now brick 1 is above brick 2 .
+The STUB of argument 1 is at (Y-12) = -12
+The HOLE of argument 2 is at (Y+12) = 4
+Terminate function  find_dependency() !

@@ -1,0 +1,2 @@
+TEST
+dolphin_ldraw_0922.ldr

@@ -1,13 +1,25 @@
+#ifndef BRICK
+#define BRICK "brick.h"
+#include BRICK 
+#endif
+
+
+#ifndef LOGHEADER
+#define LOGHEADER "logHeader.h"
+#include LOGHEADER 
+#endif
+
+
+
 #include <stdlib.h> 
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
 #include <fstream>
 #include <string>
-#include "brick.h"
 #include "brickType.h"
-int bnum = 2500;
-using namespace std;
+using namespace std;   // 別忘了 using 它，不然 de 不完 bug 
+// - - - - - - - - - - - - - - - - - - - - - - - -
 string ldrToBrickNode(string ldrLine, int c, int ldrLineLength);
 int closeFile();
 char filename[] = "mini_lego_for_graph_4"; /*filename must be array*//*dolphin_ldraw_0922*//*mini_lego_set_for_building_dependency_graph*///"mini_lego_for_graph_2"*/
@@ -16,24 +28,21 @@ std::fstream logFile;
 char brickNodeTxt[100];
 int find_dependency( int bricksIndex1, int bricksIndex2 );
 int output_graph(int ID1, int ID2, int v1, int v2);
+// 這行被我挪到 brickType.h 裡面了 : bool isRotate( char matrixStr[50] );
+// 這行被我挪到 brick.h 裡面了 : struct brick bricks[2500];
+//    alongXpi = "1 0 0 0 -1 0 0 0 -1";
+//    String alongXpiY90 = "0 0 1 0 -1 0 -1 0 0";
 
-//**************************************/
 
-int vvv, www= -20;
-char * setBrickType(char * tok, char matrixStr[50], int ID );
-struct brick bricks[2500];
-/*
-alongXpi = "1 0 0 0 -1 0 0 0 -1";
-String alongXpiY90 = "0 0 1 0 -1 0 -1 0 0";
-*/
-/*    std::fstream graphFile; */
 int main()
 {    
-	//**************************************/
+	openLogFile2();
+	//**************************************
 	logFile.open("log.txt",std::fstream::trunc | std::fstream::out); /*ref-A*//*graph.txt*/
 	logFile.close();
 	logFile.open("log.txt",std::fstream::out | std::fstream::app); /*must reopen with the same flag as ref-A*//*graph.txt*/
-    /**************************************/
+    //**************************************
+
 	strcat(filename,".ldr");
     /* if graphFile is local, use this :    */
 	std::fstream graphFile; 
@@ -170,130 +179,7 @@ string ldrToBrickNode(string ldrLine, int c, int ldrLineLength)
 
 
 //**********************************************************/
-char * setBrickType(char * tok, char matrixStr[50], int ID ){
-/*
-不需要考慮 maxStr[2]，只需要檢查 [0]以及[1]就足以應付 “是否旋轉” 的判斷了。
-cosine will be determined by the first and 2nd ele of maxtrixStr
-而 consine 的值 has 4 possibility 四種可能：
-一，maxStr[0] maxStr[1] 分別為 [1][空格]
-二，maxStr[0] maxStr[1] 分別為 [-][1]
-三，maxStr[0] maxStr[1] 分別為 [0][空格]
-四，maxStr[0] maxStr[1] 分別為 [-][0] 
-*/  
-	int compare;//*int strcmp ( const char * str1, const char * str2 );*/
-	int compare2;
-	char *brickType = new char[100]; 
-    char cosine[]=""; //我 cosine[] 最終的寫法是非常類似 filename[] 的寫法
 
-		//   >>   element 1 will be put into cosine:
-	string s = std::string(1, matrixStr[0]); 
-	const char *S  =s.c_str();
-	strcat(cosine, S); // wrong code: cosine = strcat(cosine, S); 
-
-	//   >>   element 2 will be put into cosine: 
-	s = std::string(1, matrixStr[1]); 
-	S = s.c_str();
-	strcat(cosine, S); // [請永遠記得 strcat有兩大種用法，別搞混] 
-
-	if(  compare=strcmp(tok,"3005.dat") == 0 ){
-			brickType = "1x1";
-			bricks[ID].holeXNum = 1;
-			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 1;
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeXNum<<"\n";
-	}
-	else if( compare = strcmp(tok, "3004.dat") == 0){ //*brick 1x2
-	    compare2 = strcmp(matrixStr, "1 0 0 0 -1 0 0 0 -1"); 
-		if( compare == 0){
-			brickType = "1x2";
-			bricks[ID].holeXNum = 2;
-			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 2;
-			bricks[ID].stubZNum = 1;
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeXNum<<"\n";
-			/*有空再來解開封印 : 以下這行 : */
-            //setBrickType_1x2( ID );
-            return brickType;
-		}
-		else{
-			brickType = "1x2_90"; //* similar to brick 1x2 but is rotated 90 degree
-			bricks[ID].holeXNum = 1;
-			bricks[ID].holeZNum = 2;
-			bricks[ID].stubXNum = 1;
-			bricks[ID].stubZNum = 2;
-
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeXNum<<"\n";
-			return brickType;				
-		}
-
-	}            //    END    if( compare == 0)
-	else if( compare=strcmp(tok,"3622.dat") == 0 ){
-	    brickType = "1x3"; // stday-WARNING! (1,3) is(z,x), NOT (x,z) !!
-			bricks[ID].holeXNum = 3;
-			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 3;
-			bricks[ID].stubZNum = 1;
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeXNum<<"\n";
-	}
-
-	else{
-		compare = strcmp(tok, "3001.dat"); //*brick 2x4*/
-		if(compare==0){
-			//*	stday Warning! 
-			//* If MLCad names a brick axb, notice that a is for Z, and b is for X 
-	        //之後可解開封印哈哈 setBrickType_2x4();
-            brickType = "2x4";
-			bricks[ID].holeXNum = 4; //For a brick 2x4: 2 is for Z, and 4 is for X 
-			bricks[ID].holeZNum = 2; 
-			bricks[ID].stubXNum = 4;
-			bricks[ID].stubZNum = 2;
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeXNum<<"\n";
-
-	        return brickType;
-		}
-		/********* 以下是嘗試中的程式 *************/
-	else if( (compare = strcmp(tok, "3003.dat")) ==0 ){ //*brick 2x2*/
-			brickType = "2x2";
-			bricks[ID].holeXNum = 2;
-			bricks[ID].holeZNum = 2;
-			bricks[ID].stubXNum = 2;
-			bricks[ID].stubZNum = 2;
-			/*有空再來解開封印 : 以下這行 : */
-			//setBrickType_2x2( ID );
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeZNum<<"\n";
-	}
-	else if( (compare = strcmp(tok, "3710.dat")) ==0 ){ // plate 1x4
-		logFile <<"\n"<< matrixStr<<"\n";
-		logFile <<"\n來看看matrixStr[0]"<< matrixStr[0]<<"停\n";
-		logFile <<"\n來看看matrixStr[1]"<< matrixStr[1]<<"停\n";
-		logFile <<"\n來看看matrixStr[2]"<< matrixStr[2]<<"停\n";
-		logFile <<"\n來看看matrixStr[3]"<< matrixStr[3]<<"停\n";
-		logFile <<"\n來看看matrixStr[4]"<< matrixStr[2]<<"停\n";
-		logFile <<"\n來看看matrixStr[5]"<< matrixStr[5]<<"停\n";
-		logFile <<"\n來看看cosine[0]"<< cosine[0]<<"停\n";
-		logFile <<"\n來看看cosine[1]"<< cosine[1]<<"停\n";
-			brickType = "plate1x4";
-			//brickType = "plate1x4cY"; // cY is clockwise along Y axis
-			bricks[ID].holeXNum = 4;
-			bricks[ID].holeZNum = 1;
-			bricks[ID].stubXNum = 4;
-			bricks[ID].stubZNum = 1;
-			bricks[ID].heightY = 8; // height is 1/3 LDU 
-			logFile << "這是 ID 為"<<ID<< " 的 " << brickType<<"\n" << "x 方向上有幾個 hole  is : " << bricks[ID].holeZNum<<"\n";
-	}
-	else{
-        brickType = "nxn";
-	    return brickType;
-	}
-
-	}
-
-
-    //*Nicole STYLE //*Thanks to what Luchian Grigore answered to how to return char array in c++ 
-    return brickType;
-    
-}
 
 
 //*************************************************************
@@ -429,3 +315,8 @@ int output_graph( int ID1, int ID2, int v1, int v2)
 	*/
     return 0;
 }
+
+
+
+
+

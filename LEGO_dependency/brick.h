@@ -18,3 +18,7 @@ struct brick{
 	int priorCount;
     
 };   /*   END brick   */
+
+//-------------------------- 
+struct brick bricks[2500];
+//--------------------------
